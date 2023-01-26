@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
@@ -7,8 +8,8 @@ public class PlayerController : MonoBehaviour {
 	public float speed = 15f;
 	public int health = 100;
 	public int damage = 20;
-	public GUIText HP;
-	public GUIText GameOver;
+	public Text HP;
+	public Text GameOver;
 	public GameObject fragments;
 	Rigidbody player_rigidbody;
 	Vector3 movement;
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour {
 		cam_offset = camera.transform.position.y - transform.position.y;
 		timer = 0.0f;
 		spawning = false;
-		original = transform.renderer.material.GetColor ("_Color");
+		original = transform.GetComponent<Renderer>().material.GetColor ("_Color");
 	}
 
 
@@ -48,8 +49,11 @@ public class PlayerController : MonoBehaviour {
 			Spawn();
 		}
 		
-		transform.renderer.material.color = original;
+		transform.GetComponent<Renderer>().material.color = original;
 		
+	}
+
+	private void Update() {
 		if (Input.GetMouseButtonDown (0)){
 			Shoot ();		
 		}
@@ -72,7 +76,7 @@ public class PlayerController : MonoBehaviour {
 	void OnTriggerEnter(Collider other){
 		if (other.gameObject.tag == "Enemy") {
 			other.gameObject.SetActive (false);
-			transform.renderer.material.color = Color.red;
+			transform.GetComponent<Renderer>().material.color = Color.red;
 			health -= damage;
 			DispHP ();
 			if (health <= 0) {
